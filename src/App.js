@@ -4,6 +4,7 @@
 
 import React from "react";
 import Tabela from "./Tabela";
+import Formulario from './Formulario';
 
 /**
  * função que efetivamente pergunta à API pelos dados dos animais
@@ -63,9 +64,8 @@ class App extends React.Component {
     return (
       <div className="container">
         <h1>Animais</h1>
-        {/* 
         <h4>Novo animal:</h4>
-        <Formulario /> */}
+        <Formulario />
 
         <br />
         <h4>Lista de animais</h4>
