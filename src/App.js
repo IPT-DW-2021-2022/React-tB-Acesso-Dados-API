@@ -10,10 +10,11 @@ import Tabela from "./Tabela";
  * CORS: https://developer.mozilla.org/pt-BR/docs/Web/HTTP/CORS
  * Corrigir o problema:
  * https://create-react-app.dev/docs/proxying-api-requests-in-development/
+ * não esquecer: depois da criação do Proxy é necessário REINICIAR o React 
  */
 async function getAnimais() {
 
-  let dados = await fetch("https://localhost:7221/api/animaisAPI/");
+  let dados = await fetch("api/animaisAPI/");
   if (!dados.ok) {
     console.error(dados)
     throw new Error("Não foi possível aceder à API e ler os dados dos Animais. Código: ",
