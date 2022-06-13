@@ -30,7 +30,7 @@ const Corpo = (props) => {
                 <td>{animal.especie}</td>
                 <td>{animal.raca}</td>
                 <td>{animal.peso}</td>
-                  <td>{animal.nomeDono}</td>             
+                <td>{animal.nomeDono}</td>
                 <td>{animal.fotografia}</td>
             </tr>
         )
