@@ -31,7 +31,12 @@ const Corpo = (props) => {
                 <td>{animal.raca}</td>
                 <td>{animal.peso}</td>
                 <td>{animal.nomeDono}</td>
-                <td>{animal.fotografia}</td>
+                <td>
+                    <img src={'Animais/' + animal.fotografia}
+                         alt={'foto do ' + animal.nome}
+                         title={animal.nome}
+                         height="50" />
+                    </td>
             </tr>
         )
     })
@@ -49,7 +54,7 @@ class Tabela extends React.Component {
         const { dadosAnimaisIN } = this.props;
 
         return (
-            <table className="table table-striped table-success">
+            <table className="table table-striped">
                 <Cabecalho />
                 <Corpo dadosTabelaIN={dadosAnimaisIN} />
             </table>
