@@ -25,12 +25,55 @@ async function getAnimais() {
   return await dados.json();
 }
 
+/**
+ * Devolve uma lista com os donos inscritos na BD da app
+ * @returns 
+ */
+async function getDonos() {
+
+  let dados = await fetch("api/donosAPI/");
+  if (!dados.ok) {
+    console.error(dados)
+    throw new Error("Não foi possível aceder à API e ler os dados dos Donos. Código: ",
+      dados.status)
+  }
+  // exportar os dados recebido
+  return await dados.json();
+}
+
+/**
+ * Insere os dados do novo animal, através da API
+ * @param {*} animal 
+ */
+async function InsereAnimal(animal) {
+  // criar o contentor que levará os dados para a API
+  let formData = new FormData();
+  formData.append("Nome", animal.Nome);
+  formData.append("Especie", animal.Especie);
+  formData.append("Raca", animal.Raca);
+  formData.append("Peso", animal.Peso);
+  formData.append("uploadFotoAnimal", animal.Foto);
+  formData.append("DonoFK", animal.DonoFK);
+  // entregar os dados à API
+  let resposta = await fetch("api/animaisAPI",
+    {
+      method: "POST",
+      body: formData
+    });
+  if (!resposta.ok) {
+    console.error(resposta);
+    throw new Error("Ocorreu um erro na adição dos dados do Animal",
+      resposta.status)
+  }
+}
+
 
 class App extends React.Component {
 
   state = {
     // esta lista de animais há-de receber dados da API
-    animais: []
+    animais: [],
+    donos: [],
   }
 
   /**
@@ -39,6 +82,7 @@ class App extends React.Component {
    */
   componentDidMount() {
     this.LoadAnimais();
+    this.LoadDonos();
   }
 
   async LoadAnimais() {
@@ -57,15 +101,53 @@ class App extends React.Component {
     }
   }
 
+
+  /**
+   * Ler os dados dos donos
+   */
+  async LoadDonos() {
+    /**
+     * Tarefas:
+     * 1. ler os dados dos Donos, da API
+     * 2. transferir esses dados para o State
+     */
+    try {
+      // 1.
+      let dadosDosDonos = await getDonos();
+      // 2.
+      this.setState({ donos: dadosDosDonos })
+    } catch (erro) {
+      console.error("Aconteceu um erro no acesso aos dados dos donos. ", erro)
+    }
+  }
+
+
+  /**
+   * enviar os dados para a API
+   * @param {*} animal 
+   */
+  handleNovoAnimal = async (animal) => {
+    try {
+      // exporta os dados para a API
+      await InsereAnimal(animal);
+      // recarregar a Tabela com os dados dos animais
+      this.LoadAnimais();
+    } catch (error) {
+      console.error("ocorreu um erro com a adição do animal (" + animal.Nome + ")")
+    }
+  }
+
+
   render() {
     // ler os dados do STATE
-    const { animais } = this.state;
+    const { animais, donos } = this.state;
 
     return (
       <div className="container">
         <h1>Animais</h1>
         <h4>Novo animal:</h4>
-        <Formulario />
+        <Formulario donosIN={donos} animalOUT={this.handleNovoAnimal} />
+        {/*            <-------          -------------->             */}
 
         <br />
         <h4>Lista de animais</h4>

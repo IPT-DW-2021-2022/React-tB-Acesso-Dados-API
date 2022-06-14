@@ -4,10 +4,16 @@
 
 import React from "react";
 
-EscolheDono=()=>{
-    return(
-        <select>
+const EscolheDono = (props) => {
+    const opcoes = props.dadosDonosIN.map((item) => {
+        return (<option value={item.id}>{item.nome}</option>)
+    })
+    return (
+        <select required
+            className="form-select"
+            onChange={props.donoEscolhidoOUT}>
             <option value="">Selecione, por favor, um dono</option>
+            {opcoes}
         </select>
     )
 }
@@ -53,14 +59,46 @@ class Formulario extends React.Component {
         this.setState({ imagemAnimal: evento.target.files[0] });
     }
 
+    /**
+     * recolhe o ID do Dono e adiciona-o ao State
+     * @param {*} evento 
+     */
+    handleDonoChange = (evento) => {
+        this.setState({ donoAnimalFK: evento.target.value });
+    }
+
+    /**
+     * ação a executar pelo React qd os dados do formulário forem submetidos
+     * @param {*} evento 
+     */
+    handleFormSubmit = (evento) => {
+        // vamos impedir o Formulário de fazer o que ele naturalmente
+        // costuma fazer, para que ele depois faça o que nós queremos...
+        evento.preventDefault();
+        // preparar os dados para o envio
+        let dadosForm={
+            Nome:this.state.nomeAnimal,
+            Especie:this.state.especieAnimal,
+            Raca: this.state.racaAnimal,
+            Peso: this.state.pesoAnimal,
+            Foto: this.state.imagemAnimal,
+            DonoFK:this.state.donoAnimalFK,
+        }
+        // preparar os dados para exportação
+        this.props.animalOUT(dadosForm);
+    }
+
+
 
     render() {
-        // ler o conteúdo das variáveis State, dentro do Render
+        // ler o conteúdo das variáveis State, ou Props, dentro do Render
         const { nomeAnimal, pesoAnimal, especieAnimal, racaAnimal } = this.state;
+        const { donosIN } = this.props;
 
         return (
             <form encType="multipart/form-data"
-                method="Post">
+                method="Post"
+                onSubmit={this.handleFormSubmit}>
                 <div className="row">
                     <div className="col-md-4">
                         Nome: <input type="text"
@@ -102,7 +140,7 @@ class Formulario extends React.Component {
                             - donoEscolhidoOUT: serve para retirar do componente, o ID do dono que o utilizador escolheu,
                             que será entregue ao 'handlerDonoChange' */}
                         Dono: <EscolheDono dadosDonosIN={donosIN}
-                                           donoEscolhidoOUT={this.handleDonoChange} />
+                            donoEscolhidoOUT={this.handleDonoChange} />
                         <br />
                     </div>
                 </div>
