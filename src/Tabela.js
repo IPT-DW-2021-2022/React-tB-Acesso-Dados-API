@@ -15,6 +15,7 @@ function Cabecalho() {
                 <th>Peso</th>
                 <th>Dono</th>
                 <th>Fotografia</th>
+                <th></th>
             </tr>
         </thead>
     )
@@ -33,10 +34,15 @@ const Corpo = (props) => {
                 <td>{animal.nomeDono}</td>
                 <td>
                     <img src={'Animais/' + animal.fotografia}
-                         alt={'foto do ' + animal.nome}
-                         title={animal.nome}
-                         height="50" />
-                    </td>
+                        alt={'foto do ' + animal.nome}
+                        title={animal.nome}
+                        height="50" />
+                </td>
+                <td>
+                    <button className="btn btn-outline-danger"
+                        onClick={() => props.animalARemoverOUT(animal.id)}
+                    >Apagar</button>
+                </td>
             </tr>
         )
     })
@@ -51,12 +57,12 @@ class Tabela extends React.Component {
 
     render() {
 
-        const { dadosAnimaisIN } = this.props;
+        const { dadosAnimaisIN, apagaAnimalOUT } = this.props;
 
         return (
             <table className="table table-striped">
                 <Cabecalho />
-                <Corpo dadosTabelaIN={dadosAnimaisIN} />
+                <Corpo dadosTabelaIN={dadosAnimaisIN} animalARemoverOUT={apagaAnimalOUT} />
             </table>
         )
     }

@@ -68,6 +68,27 @@ async function InsereAnimal(animal) {
 }
 
 
+async function ApagaAnimal(idAnimal) {
+  // criar o contentor que levará os dados para a API
+  let formData = new FormData();
+  formData.append("id", idAnimal);
+  // entregar os dados à API
+  let resposta = await fetch("api/animaisAPI/" + idAnimal,
+    {
+      method: "DELETE",
+      body: formData
+    });
+  if (!resposta.ok) {
+    console.error(resposta);
+    throw new Error("Ocorreu um erro na eliminção dos dados do Animal",
+      resposta.status)
+  }
+}
+
+
+
+
+
 class App extends React.Component {
 
   state = {
@@ -137,6 +158,22 @@ class App extends React.Component {
     }
   }
 
+  /**
+   * recebe o ID do animal a apagar e envia esses dados para a API
+   * @param {*} idAnimal 
+   */
+  handleApagaAnimal = async (idAnimal) => {
+    try {
+      // exporta os dados para a API
+      await ApagaAnimal(idAnimal);
+      // recarregar a Tabela com os dados dos animais
+      this.LoadAnimais();
+    } catch (error) {
+      console.error("ocorreu um erro com a eliminação do animal.")
+    }
+  }
+
+
 
   render() {
     // ler os dados do STATE
@@ -151,7 +188,7 @@ class App extends React.Component {
 
         <br />
         <h4>Lista de animais</h4>
-        <Tabela dadosAnimaisIN={animais} />
+        <Tabela dadosAnimaisIN={animais} apagaAnimalOUT={this.handleApagaAnimal} />
 
         <br /><br />
       </div>
